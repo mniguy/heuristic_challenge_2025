@@ -1,7 +1,7 @@
 import traceback
 from time import time
 from logging import Logger
-import psutil  # 프로세스 메모리때문에 추가함
+import psutil
 import os
 
 from pyquoridor.exceptions import InvalidMove, InvalidFence
@@ -100,11 +100,10 @@ def execute_heuristic_search(agent, initial_state: dict, logger: Logger):
         finally:
             stop_monitoring = True
 
-        # Compute how much time passed -> 초 단위가 아닌 밀리초 단위로 측정
+        # Compute how much time passed 
         time_end = time()
         time_delta = time_end - time_start  
 
-        # board 내장 측정과 psutil 측정 중 더 큰 값 사용
         board_memory = board.get_max_memory_usage() / MEGABYTES
         memory_usage = max(board_memory, peak_memory - initial_memory)
 
