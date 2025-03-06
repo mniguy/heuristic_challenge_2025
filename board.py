@@ -69,6 +69,11 @@ class GameBoard:
         # Initialize a new game board
         self._board = Board()
         self._fence_count = {'black': 10, 'white': 10}
+
+        # Initialize the turn required for movement
+        self._vertical_turns = [[self._rng.randint(1, 5) for _ in range(9)] for _ in range(8)]
+        self._horizontal_turns = [[self._rng.randint(1, 5) for _ in range(8)] for _ in range(9)]
+
         # Initialize board renderer for debugging purposes
         if IS_DEBUG:  # Logging for debug
             self._logger.debug('Rendered board: \n' + self._unique_game_state_identifier())
@@ -110,6 +115,20 @@ class GameBoard:
 
         # Update memory usage
         self._update_memory_usage()
+
+    def get_move_turns(self, current_pos: tuple, next_pos: tuple) -> int:
+        """Return the number of turns required to move between adjacent positions"""
+        row1, col1 = current_pos
+        row2, col2 = next_pos
+        
+        if col1 == col2:
+            min_row = min(row1, row2)
+            return self._vertical_turns[min_row][col1]
+        elif row1 == row2:
+            min_col = min(col1, col2)
+            return self._horizontal_turns[row1][min_col]
+        else:
+            return float('inf')
 
     def reset_memory_usage(self):
         """
