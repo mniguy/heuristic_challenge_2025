@@ -92,64 +92,67 @@ If the given piece cannot be moved to the victory point, return an empty list []
 
 #### Part 2, Local search
 
+The goal of this problem is to find the three most appropriate barrier positions that interfere with your opponent's path, given that your path is already determined. While searching, you will know the opponent's position, but you should not search for the opponent's shortest path. Additionally, your search must start from one of the adjacent edges to your current position, and you can only move to one of the 8 adjacent areas.
+
 이 문제의 목표는 여러분의 경로가 결정된 상태에서, 상대방의 진로를 방해하는 가장 적절한 장벽 위치 3개를 찾는 것입니다. 탐색 시 상대방의 위치는 알고있겠지만, 여러분은 상대방의 최단경로를 탐색해서는 안됩니다. 또한, 여러분의 탐색은 여러분의 현 위치에 인접한 모서리에서 시작해야 하고, 인접한 8개 영역으로만 움직일 수 있습니다.
 
-- 형태: 개인과제
-- 실격: 다음 조건 중 하나라도 **위반**하였을 때
-  1. 수업 자료에 적힌 Local search 알고리즘을 그대로 또는 변형하여 사용해야 하고, heuristic/uninformed search는 결합할 수 없다.
-  2. 탐색의 시작 위치는 현재 자신의 위치에 인접한 모서리 4개 중 하나만 가능하다.
-  3. 상대방이 실제로 이동할 경로 탐색은 할 수 없다.
-  4. 국소 탐색 과정에서의 움직임은 현재 탐색하던 모서리와 꼭짓점을 공유하는 6개 모서리로만 가능하다.
-  5. multi-threading이나 multi-processing 등 병렬 실행이나 병렬 탐색은 할 수 없다.
-  6. 알고리즘 구동 시간은 5분을 초과할 수 없고, 메모리 사용량은 5MB를 초과할 수 없다.
-- 승리
-  1. 기초 단계: 제한된 조건을 오류 없이 만족하면서, 5분 이내에 조교 모델과 대등하거나 더 적합한 최적의 장벽 위치*를 찾으면 됩니다.
-  2. 중급 단계: 기초 단계를 달성하고, 탐색을 10초 이내로 완료하세요.
-  3. 고급 단계: 중급 단계를 달성하고, 메모리 사용량을 1MB 이내로 완료하세요.
-  4. 도전 단계: 고급 단계를 달성하고, 조교 모델보다 적은 탐색 횟수로 최적 장벽 위치를 찾으세요.
+- Format: Individual task
+
+  형태: 개인과제
+  
+- Disqualification: You will be disqualified if any of the following conditions are **violated**:
+
+  실격: 다음 조건 중 하나라도 **위반**하였을 때
+  
+  1. You must use the Local Search algorithm as described in the course materials, with or without modification, and heuristic/uninformed search cannot be combined.
+
+     수업 자료에 적힌 Local search 알고리즘을 그대로 또는 변형하여 사용해야 하고, heuristic/uninformed search는 결합할 수 없다.
+     
+  2. The starting position for the search must be one of the four adjacent edges to your current position.
+
+     탐색의 시작 위치는 현재 자신의 위치에 인접한 모서리 4개 중 하나만 가능하다.
+     
+  3. You cannot search for the path that the opponent will actually take.
+
+     상대방이 실제로 이동할 경로 탐색은 할 수 없다.
+     
+  4. During the local search process, movement is only allowed to one of the 8 cells that share the current edge and vertex being searched.
+
+     국소 탐색 과정에서의 움직임은 현재 탐색하던 모서리와 꼭짓점을 공유하는 8개 칸으로만 가능하다.
+     
+  5. You cannot use parallel execution or parallel search, such as multi-threading or multi-processing.
+
+     multi-threading이나 multi-processing 등 병렬 실행이나 병렬 탐색은 할 수 없다.
+     
+  6. The algorithm execution time must not exceed 5 minutes, and the memory usage must not exceed 5MB.
+
+     알고리즘 구동 시간은 5분을 초과할 수 없고, 메모리 사용량은 5MB를 초과할 수 없다.
+     
+- Victory / 승리
+  1. Basic Level: Find the optimal barrier positions* that are equal to or better than the TA model's within 5 minutes while satisfying the restricted conditions without errors.
+
+     기초 단계: 제한된 조건을 오류 없이 만족하면서, 5분 이내에 조교 모델과 대등하거나 더 적합한 최적의 장벽 위치*를 찾으면 됩니다.
+     
+  2. Intermediate Level: Achieve the basic level and complete the search within 10 seconds.
+
+     중급 단계: 기초 단계를 달성하고, 탐색을 10초 이내로 완료하세요.
+     
+  3. Advanced Level: Achieve the intermediate level and complete the search with memory usage within 1MB.
+
+     고급 단계: 중급 단계를 달성하고, 메모리 사용량을 1MB 이내로 완료하세요.
+     
+  4. Challenge Level: Achieve the advanced level and find the optimal barrier position with fewer search steps than the TA model.
+
+     도전 단계: 고급 단계를 달성하고, 조교 모델보다 적은 탐색 횟수로 최적 장벽 위치를 찾으세요.
+
+**Note**: The assistant code is again disclosed. The barrier positions found by the assistant model are evaluated based on how much the opponent's shortest path increases, and the position that increases it the most is considered the most suitable barrier position. However, if the game rules are violated, you will be disqualified, and the opponent’s distance will be calculated as "0" instead of infinity. Similarly, when submitting your code to the evaluation system, you will receive the result within 6 hours.
 
 **참고**: 조교 코드는 역시 공개되지 않습니다. 조교 모델이 찾은 장벽 위치와 대등하거나 더 적합한 위치는 상대방의 최단경로가 얼마나 증가하는지를 바탕으로 계산하며, 더 많이 증가한 경우에 더 적합한 장벽 위치로 판단합니다. 단, 게임 규칙에 위반되는 경우는 실격패를 당하게 되므로, 상대방의 거리는 무한대가 아니라 "0"으로 계산됩니다. 마찬가지로 평가 시스템에 코드를 제출하면 결과를 6시간 내로 알 수 있습니다.
 
 
-#### Part 3. Belief-state search
+#### Part 3. Belief-state search (disclosed)
 
-이 문제의 목표는 가능한 모든 가능성을 판단하고, 이를 바탕으로 최적의 게임 플레이를 수행하는 것입니다. 탐색 시 여러분의 위치와 상대방의 위치가 알려져있으며, 상대방 에이전트의 행동은 임의의 행동 중 하나를 선택할 것입니다. 선택되는 행동은 상하좌우 이동의 4가지와 여러분을 방해하기 위한 상하좌우 4가지 장벽 건설 중 하나를 수행하게 됩니다. 게임의 시작부터 끝까지 모든 행동을 파악할 수는 없으므로, 여러분은 임의의 게임 상황에서 앞으로 4턴을 예측하고 이를 belief-state search로 구현해야 합니다.
-
-- 형태: 그룹과제 (2인)
-- 실격: 다음 조건 중 하나라도 **위반**하였을 때
-  1. 수업 자료에 적힌 Belief-state search 알고리즘을 그대로 또는 변형하여 사용해야 하나, Part 1이나 Part 2에서 고려했던 알고리즘을 belief state의 탐색에 결합하는 것도 가능합니다. 단, state의 탐색에는 Part 1이나 2의 알고리즘을 쓸 수 없습니다.
-  2. 알고리즘 구동 시간은 10분을 초과할 수 없습니다.
-  3. 알고리즘의 추가 메모리 사용량은 1GB를 초과할 수 없습니다.
-- 승리
-  1. 기초 단계: 제한된 조건을 만족하는 알고리즘을 오류 없이 구성하세요.
-  2. 중급 단계: 기초 단계를 달성하고, 5초 이하로 탐색을 완료하세요.
-  3. 고급 단계: 중급 단계를 달성하고, 조교 모델이 찾은 action sequence와 대등하거나 더 좋은 sequence*를 찾으세요.
-  4. 도전 단계: 고급 단계를 달성하고, 메모리 사용량을 10MB 이하로 관리하세요.(?)
-  5. 가산점: <리그전> 도전 단계를 달성한 다른 팀과 1:1 비교하여, 1위에게 가산점 3점, 2위에게 가산점 2점, 3-4위에게 가산점 1점이 부여됩니다.
-     - 단, 고급 단계 달성 팀이 4팀 "이하"인 경우 도전단계는 평가하지 않고, 가산점은 적용되지 않습니다.
-
-**참고**: 조교 코드는 역시 공개되지 않습니다. 조교 모델이 찾은 action sequence와 대등하거나 더 좋은 sequence는 상대방의 최단경로가 얼마나 증가하는지를 바탕으로 계산합니다. 다시 말해, 현재 상태에서 계획된 대로 5번째 턴을 수행하였을 때, 상대의 남은 최단경로가 더 많이 남았다면 더 적합한 sequence로 판단합니다. 평가에 소요되는 시간을 고려하여, 평가 시스템에 코드를 제출하면 결과를 얻기까지 24시간 정도 소요될 수 있습니다.
-
-
-#### Part 4. Adversarial Search
-
-이 문제의 목표는 쿼리도 게임을 실시간으로 하는 에이전트를 만드는 것입니다. 여러분 에이전트의 턴마다, 어떤 행동을 할 것인지 시스템이 질문하며, 게임이 끝날때 최종적으로 상대방을 이기면 됩니다.
-
-- 형태: 그룹과제 (2인)
-- 실격: 다음 조건 중 하나라도 **위반**하였을 때
-  1. 한 학기 동안 수업자료에서 배운 알고리즘과 그 변형만 사용할 수 있습니다. 문제를 분해하여 알고리즘을 조합하는 것은 허용됩니다.
-  2. 매 턴마다, 알고리즘 구동 시간은 1분을 초과할 수 없습니다.
-  3. 알고리즘의 추가 메모리 사용량은 1GB를 초과할 수 없습니다.
-- 승리
-  1. 기초 단계: 제한된 조건을 만족하는 알고리즘을 오류 없이 구성하고, 임의로 행동하는 에이전트를 이기세요.
-  2. 중급 단계: 기초 단계를 달성하고, 매 턴마다 알고리즘 구동 시간을 5초 이내로 줄이세요.
-  3. 고급 단계: 중급 단계를 달성하고, 
-  4. 도전 단계: 고급 단계를 달성하고, 조교의 에이전트를 이기세요.
-  5. 가산점: <리그전> 도전 단계를 달성한 다른 팀과 1:1 대결하여, 1위에게 가산점 3점, 2위에게 가산점 2점, 3-4위에게 가산점 1점이 부여됩니다.
-     - 단, 고급 단계 달성 팀이 4팀 "이하"인 경우 도전단계는 평가하지 않고, 가산점은 적용되지 않습니다.
-
-**참고**: 임의 행동 에이전트 코드는 공개되나, 조교의 에이전트 코드는 공개되지 않습니다. 승률은 10번의 게임을 실행하여 평균 내 계산하게 됩니다. 평가에 소요되는 시간을 고려하여, 평가 시스템에 코드를 제출하면 결과를 얻기까지 24시간 정도 소요될 수 있습니다.
-
+#### Part 4. Adversarial Search (disclosed)
 
 #### Environment (환경)
 
