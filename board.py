@@ -15,7 +15,7 @@ from typing import Tuple, List, Literal
 from psutil import Process as PUInfo, NoSuchProcess
 # Import some class definitions that implements the Settlers of Catan game.
 from pyquoridor.board import Board
-from pyquoridor.exceptions import GameOver
+from pyquoridor.exceptions import GameOver, InvalidFence  # InvalidFence 추가
 from pyquoridor.square import MAX_COL, MAX_ROW
 
 # Import action specifications
@@ -65,12 +65,11 @@ class GameBoard:
 
         if IS_DEBUG:  # Logging for debug
             self._logger.debug('Initializing a new game board...')
-
+        
         # Initialize a new game board
         self._board = Board()
         self._fence_count = {'black': 10, 'white': 10}
 
-        # Initialize the turn required for movement
         self._vertical_turns = [[self._rng.randint(1, 5) for _ in range(9)] for _ in range(8)]
         self._horizontal_turns = [[self._rng.randint(1, 5) for _ in range(8)] for _ in range(9)]
 
@@ -102,8 +101,19 @@ class GameBoard:
         for _ in range(start_with_random_fence):
             for p in self._board.pawns.keys():
                 fences = self.get_applicable_fences(p)
-                fence, orientation = self._rng.choice(fences)
-                BLOCK(p, fence, orientation)(self)
+                # 초기 벽 설치 오류 수정 (말이 상대 진영에 도달할 수 없도록 벽이 설치되는 오류 해결)
+                while fences:
+                    fence, orientation = self._rng.choice(fences)
+                    try:
+                        BLOCK(p, fence, orientation)(self)
+                        break  # 성공적으로 벽이 설치되면 루프 종료
+                    except InvalidFence:
+                        # 해당 위치에 벽을 설치할 수 없으면 그 위치를 제거하고 다른 위치 시도
+                        fences.remove((fence, orientation))
+                        continue
+                    except:
+                        # 다른 예외가 발생하면 중단
+                        raise
 
         if IS_DEBUG:  # Logging for debug
             self._logger.debug('After moving initial position: \n' + self._unique_game_state_identifier())
@@ -129,7 +139,27 @@ class GameBoard:
             return self._horizontal_turns[row1][min_col]
         else:
             return float('inf')
+<<<<<<< Updated upstream
 
+=======
+    
+    def print_turns(self):
+        """Print the required turns for each edge in a visual format"""
+        for i in range(9):
+            row = ""
+            for j in range(8):
+                row += f"O-{self._horizontal_turns[i][j]}-"
+            row += "O"
+            print(row)
+            
+            # 세로 방향 턴 수 출력 (마지막 줄 제외)
+            if i < 8:
+                row = ""
+                for j in range(9):
+                    row += f"{self._vertical_turns[i][j]}    "
+                print(row)
+        
+>>>>>>> Stashed changes
     def reset_memory_usage(self):
         """
         Reset memory usage
@@ -141,7 +171,6 @@ class GameBoard:
     def set_to_state(self, specific_state=None, is_initial: bool = False):
         """
         Restore the board to the initial state for repeated evaluation.
-
         :param specific_state: A state representation which the board reset to
         :param is_initial: True if this is an initial state to begin evaluation
         """
@@ -177,7 +206,6 @@ class GameBoard:
     def get_state(self) -> dict:
         """
         Get the current board state
-
         :return: A copy of the current board state dictionary
         """
         if IS_DEBUG:  # Logging for debug
@@ -191,7 +219,6 @@ class GameBoard:
     def get_initial_state(self) -> dict:
         """
         Get the initial board state
-
         :return: A copy of the initial board state dictionary
         """
         if IS_DEBUG:  # Logging for debug
@@ -217,7 +244,6 @@ class GameBoard:
     def get_applicable_moves(self, player: Literal['black', 'white'] = None) -> List[Tuple[int, int]]:
         """
         Get the list of applicable roads
-
         :param player: Player name. black or white. (You can ask your player ID by calling get_player_index())
         :return: A copy of the list of applicable move coordinates.
             (List of Tuple[int, int].)
