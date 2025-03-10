@@ -101,18 +101,15 @@ class GameBoard:
         for _ in range(start_with_random_fence):
             for p in self._board.pawns.keys():
                 fences = self.get_applicable_fences(p)
-                # 초기 벽 설치 오류 수정 (말이 상대 진영에 도달할 수 없도록 벽이 설치되는 오류 해결)
                 while fences:
                     fence, orientation = self._rng.choice(fences)
                     try:
                         BLOCK(p, fence, orientation)(self)
-                        break  # 성공적으로 벽이 설치되면 루프 종료
+                        break
                     except InvalidFence:
-                        # 해당 위치에 벽을 설치할 수 없으면 그 위치를 제거하고 다른 위치 시도
                         fences.remove((fence, orientation))
                         continue
                     except:
-                        # 다른 예외가 발생하면 중단
                         raise
 
         if IS_DEBUG:  # Logging for debug
@@ -130,7 +127,6 @@ class GameBoard:
         """Return the number of turns required to move between adjacent positions"""
         row1, col1 = current_pos
         row2, col2 = next_pos
-        
         if col1 == col2:
             min_row = min(row1, row2)
             return self._vertical_turns[min_row][col1]
@@ -139,9 +135,6 @@ class GameBoard:
             return self._horizontal_turns[row1][min_col]
         else:
             return float('inf')
-<<<<<<< Updated upstream
-
-=======
     
     def print_turns(self):
         """Print the required turns for each edge in a visual format"""
@@ -152,14 +145,12 @@ class GameBoard:
             row += "O"
             print(row)
             
-            # 세로 방향 턴 수 출력 (마지막 줄 제외)
             if i < 8:
                 row = ""
                 for j in range(9):
                     row += f"{self._vertical_turns[i][j]}    "
                 print(row)
         
->>>>>>> Stashed changes
     def reset_memory_usage(self):
         """
         Reset memory usage
@@ -206,6 +197,8 @@ class GameBoard:
     def get_state(self) -> dict:
         """
         Get the current board state
+        현재 state 반환
+
         :return: A copy of the current board state dictionary
         """
         if IS_DEBUG:  # Logging for debug
